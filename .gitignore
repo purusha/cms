@@ -1,0 +1,11 @@
+.classpath
+.project
+.settings/
+target/
+bin/
+*~
+*.log
+*.iml
+log/
+node_modules/
+.factorypath
