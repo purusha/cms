@@ -1,6 +1,7 @@
 package it.at.cms.controller;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,15 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.at.cms.repo.Blueprint;
 import it.at.cms.repo.BlueprintRepository;
+import it.at.cms.service.BlueprintValidator;
 
 @RestController
 public class BlueprintController {
 	
 	private final BlueprintRepository repository;
+	private BlueprintValidator validator;
 
 	@Autowired
-	public BlueprintController(BlueprintRepository repository) {
-		this.repository = repository;		
+	public BlueprintController(BlueprintRepository repository, BlueprintValidator validator) {
+		this.repository = repository;
+		this.validator = validator;		
 	}
 
 	@GetMapping("/blueprint")
@@ -29,9 +33,19 @@ public class BlueprintController {
 		return repository.findAll();
 	}
 
+	// curl -v -X POST -d "{}" -H "Content-Type: application/json"  http://localhost:8080/blueprint
+	// curl -v -X POST -d "{\"a\":1, \"b\":\"alalal alalal\", \"a.z\":\"123\"}" -H "Content-Type: application/json"  http://localhost:8080/blueprint
 	@PostMapping("/blueprint")
 	public Blueprint create(@RequestBody Blueprint b) {
-		return repository.save(b);
+		if (validator.isValid(b)) {
+			
+			b.setId(UUID.randomUUID().toString());
+			
+			return repository.save(b);
+			
+		} else {
+			throw new NotValidBlueprint(b);
+		}
 	}
 
 	@GetMapping("/blueprint/{id}")
