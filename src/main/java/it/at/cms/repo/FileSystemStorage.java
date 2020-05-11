@@ -1,6 +1,7 @@
 package it.at.cms.repo;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
@@ -11,6 +12,8 @@ public class FileSystemStorage implements BlueprintRepository {
 
 	@Override
 	public <S extends Blueprint> S save(S entity) {
+		entity.setId(UUID.randomUUID().toString());
+		
 		log.info("{}", ReflectionToStringBuilder.toString(entity));
 		
 		return entity;

@@ -1,7 +1,6 @@
 package it.at.cms.controller;
 
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +15,7 @@ import it.at.cms.repo.Blueprint;
 import it.at.cms.repo.BlueprintRepository;
 import it.at.cms.service.BlueprintValidator;
 
-@RestController
+@RestController()
 public class BlueprintController {
 	
 	private final BlueprintRepository repository;
@@ -38,11 +37,7 @@ public class BlueprintController {
 	@PostMapping("/blueprint")
 	public Blueprint create(@RequestBody Blueprint b) {
 		if (validator.isValid(b)) {
-			
-			b.setId(UUID.randomUUID().toString());
-			
 			return repository.save(b);
-			
 		} else {
 			throw new NotValidBlueprint(b);
 		}

@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 
@@ -26,14 +27,20 @@ public class Blueprint {
         _properties.put(key, value);
     }
     
+    //XXX used inside project 
+    @JsonIgnore
     public Map<String, Object> getProperties() {
     	return this._properties;
     }
     
+    //XXX used inside project
+    @JsonIgnore
     public void setId(String id) {
     	this._id = id;
     }
     
+    //XXX used inside project
+    @JsonIgnore
     public String getId() {
     	return this._id;
     }
