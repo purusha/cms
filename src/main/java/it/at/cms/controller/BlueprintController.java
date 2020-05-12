@@ -19,7 +19,7 @@ import it.at.cms.service.BlueprintValidator;
 public class BlueprintController {
 	
 	private final BlueprintRepository repository;
-	private BlueprintValidator validator;
+	private final BlueprintValidator validator;
 
 	@Autowired
 	public BlueprintController(BlueprintRepository repository, BlueprintValidator validator) {
@@ -63,6 +63,10 @@ public class BlueprintController {
 
 	@DeleteMapping("/blueprint/{id}")
 	public void delete(@PathVariable String id) {
-		repository.deleteById(id);
+		//repository.deleteById(id);
+		
+		repository.delete(
+			repository.findById(id).orElseThrow(() -> new NoSuchElementException())
+		);
 	}
 }

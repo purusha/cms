@@ -5,7 +5,9 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import it.at.cms.repo.Blueprint;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class BlueprintValidator {
 
@@ -24,7 +26,11 @@ public class BlueprintValidator {
 			return false;
 		}
 		
+		properties.entrySet().forEach(entry -> {
+			log.info("{} => [{}] = {}", entry.getKey(), entry.getValue().getClass().getName(), entry.getValue());
+		});
+		
 		return true;
-	}
+	}		
 
 }
