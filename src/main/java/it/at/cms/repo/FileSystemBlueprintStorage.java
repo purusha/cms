@@ -20,13 +20,16 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FileSystemStorage implements BlueprintRepository {
+public class FileSystemBlueprintStorage implements BlueprintRepository {
 	
-	private static final String TMP_CMS = "/tmp/cms";
-	private final ObjectMapper mapper;
+	public static final String TMP_CMS = "/tmp/cms";
+	
+	public static final String BLUEPRINT_FOLDER_PREFIX = "B-";
+	
+	private final ObjectMapper mapper;	
 	
 	@Autowired
-	public FileSystemStorage() {
+	public FileSystemBlueprintStorage() {
 		this.mapper = new ObjectMapper();
 	}
 
@@ -34,12 +37,12 @@ public class FileSystemStorage implements BlueprintRepository {
 	@Override
 	public <S extends Blueprint> S save(S entity) {
 		
-		//XXX do this id is null ... otherwise use what is contained !!!
+		//XXX do this only when id is null ... otherwise use what is contained !!!
 		entity.setId(UUID.randomUUID().toString());
 		
 		log.info("{}", ReflectionToStringBuilder.toString(entity));
 		
-		final File b = new File(TMP_CMS + File.separator + "B-" + entity.getId());		
+		final File b = new File(TMP_CMS + File.separator + BLUEPRINT_FOLDER_PREFIX + entity.getId());		
 		mapper.writeValue(b, entity);
 		
 		final File bData = new File(TMP_CMS + File.separator + entity.getId());
@@ -56,7 +59,7 @@ public class FileSystemStorage implements BlueprintRepository {
 	@SneakyThrows
 	@Override
 	public Optional<Blueprint> findById(String id) {
-		final File b = new File(TMP_CMS + File.separator + "B-" + id);
+		final File b = new File(TMP_CMS + File.separator + BLUEPRINT_FOLDER_PREFIX + id);
 		
 		return Optional.ofNullable(mapper.readValue(b, Blueprint.class));
 	}
@@ -99,7 +102,7 @@ public class FileSystemStorage implements BlueprintRepository {
 	@SneakyThrows
 	@Override
 	public void delete(Blueprint entity) {
-		final File b = new File(TMP_CMS + File.separator + "B-" + entity.getId());
+		final File b = new File(TMP_CMS + File.separator + BLUEPRINT_FOLDER_PREFIX + entity.getId());
 		b.delete();
 		
 		final File bData = new File(TMP_CMS + File.separator + entity.getId());

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<body>	
+    <div layout:fragment="content">
+    	<br />
+		<div class="container-fluid">		          		
+			<textarea id="blueprint" cols="120" rows="30"></textarea>		
+			<br />  
+			<button id="send">Submit</button>		                   		
+		</div>        
+    </div>
+    <script layout:fragment="script">   
+	    window.addEventListener('load', function(){
+	  		console.log("#######");
+	  		
+	  		$("#send").click(function(){
+	  			var content = $("#blueprint").val();
+	  			
+	  			$.ajax({
+	  				url: "http://localhost:8080/blueprint",
+	  				type: "POST",
+	  				data: content,
+	  				success: function(){
+	  					
+	  					/*
+	  						if OK redirect to /
+	  						else warning please !!?
+	  					*/
+	  					
+	  				},
+	  				dataType: "json",
+	  				contentType: "application/json"
+	  			});
+	
+	  		});          		
+	  	});    
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<body>
+    <div layout:fragment="content">
+    
+    	<!--  
+		<h1 class="mt-4">Static Navigation</h1>
+		-->
+		<br />
+		
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="/">/</a></li>
+            <li class="breadcrumb-item active" th:text="${blueprint._id}"></li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="mb-0" th:text="${blueprint._properties}"></p>
+            </div>
+        </div>    
+
+		<!--  
+		ASSETS    	
+        <table class="table table-striped table-responsive-md">
+			<thead>					    
+				<tr>
+			        <th>###</th>
+			        <th>DATA</th>
+			    </tr>
+		    </thead>
+		    <tbody>				    
+			    <tr th:each="asset: ${assets}">
+			    	<td>
+			    		<a th:href="@{/asset/{id}(id=${asset._id})}" class="btn btn-primary"><i class="fas fa-code ml-2"></i></a>
+			    	</td>
+			        <td th:text="${asset._properties}" />
+			    </tr>
+		    </tbody>
+		</table>
+		-->
+		
+        <div class="card mb-4">
+            <div class="card-body">		
+				<div id="formio"></div>
+            </div>
+        </div>    				
+    </div> 
+        
+    <script layout:fragment="script">
+	    window.addEventListener('load', function(){
+	  		console.log("#######");
+	  		
+	  		Formio.icons = 'fontawesome';
+	  		
+		    var message = "[[${blueprint._id}]]";
+	  		
+	  		$.ajax({
+				url: "http://localhost:8080/blueprint/" + message,
+				type: "GET",
+				success: function(r, s, o){      					
+					Formio.createForm(document.getElementById('formio'), r._properties).then(function(form) {
+	          		  form.on('submit', function(submission) {
+	          		    console.log("Submission is: " + submission);
+	          		  });
+	          		});
+				},
+				dataType: "json",
+				contentType: "application/json"
+			});
+	  		          		
+	  	});    
+    </script>
+</body>
+</html>
