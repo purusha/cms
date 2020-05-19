@@ -1,13 +1,14 @@
 package it.at.cms.repo;
 
-import static it.at.cms.repo.FileSystemBlueprintStorage.BLUEPRINT_FOLDER_PREFIX;
 import static it.at.cms.repo.FileSystemBlueprintStorage.TMP_CMS;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -93,7 +94,7 @@ public class FileSystemAssetStorage implements AssetRepository {
 
 	@Override
 	public Iterable<Asset> findAllByBlueprint(Blueprint b) {
-		final File assets = new File(TMP_CMS + File.separator + BLUEPRINT_FOLDER_PREFIX + b.getId() + File.separator + "assets.json");
+		final File assets = new File(TMP_CMS + File.separator + b.getId() + File.separator + "assets.json");
 		final List<Asset> result = new ArrayList<>();
 		
 		if (assets.exists()) {
@@ -106,7 +107,12 @@ public class FileSystemAssetStorage implements AssetRepository {
 	@Override
 	@SneakyThrows
 	public void createToBlueprint(Blueprint b, Asset asset) {
-		final File assets = new File(TMP_CMS + File.separator + BLUEPRINT_FOLDER_PREFIX + b.getId() + File.separator + "assets.json");
+		log.info("{}", ReflectionToStringBuilder.toString(b));
+		final File assets = new File(TMP_CMS + File.separator + b.getId() + File.separator + "assets.json");
+		
+		if (! assets.exists()) {
+			Files.createFile(assets.toPath());
+		}
 		
 		mapper.writeValue(assets, asset);		
 	}

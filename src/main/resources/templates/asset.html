@@ -59,7 +59,28 @@
 				success: function(r, s, o){      					
 					Formio.createForm(document.getElementById('formio'), r._properties).then(function(form) {
 	          		  form.on('submit', function(submission) {
-	          		    console.log("Submission is: " + submission);
+	          		    	          			  
+	          			console.log(submission);
+	      	  			var content = JSON.stringify(submission.data);	      	  			
+	      	  			console.log(content);  	
+	    	  			
+	    	  			$.ajax({
+	    	  				url: "http://localhost:8080/asset/" + message,
+	    	  				type: "POST",
+	    	  				data: content,
+	    	  				success: function(){
+	    	  					
+	    	  					/*
+	    	  						if OK redirect to /
+	    	  						else warning please !!?
+	    	  					*/
+	    	  					
+	    	  				},
+	    	  				dataType: "json",
+	    	  				contentType: "application/json"
+	    	  			});	          			  
+	          			  
+	          			  
 	          		  });
 	          		});
 				},
